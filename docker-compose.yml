@@ -29,9 +29,15 @@ services:
       - ./backend:/app
     command: ["./entrypoint.sh"]
 
+  # Frontend en contenedor: NO arranca por defecto. En desarrollo el front se corre
+  # nativo con `pnpm dev` (HMR más rápido, sin polling). Este servicio queda disponible
+  # solo bajo el profile `full`, para una prueba integrada en contenedor si se quiere:
+  #   docker compose --profile full up
+  # En producción el front se sirve como build estático (Nginx), no con este dev server.
   frontend:
     build: ./frontend
     container_name: erp_frontend
+    profiles: ["full"]
     depends_on:
       - backend
     environment:
