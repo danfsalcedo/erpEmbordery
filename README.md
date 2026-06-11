@@ -26,18 +26,35 @@ viven en el mismo repo por comodidad (monorepo). El backend es un **monolito mod
 - Docker + Docker Compose
 - (Para desarrollo fuera de Docker) Python 3.12, Node 22, **pnpm** (no npm)
 
-## Puesta en marcha
+## Puesta en marcha (desarrollo)
+
+Backend + base de datos en Docker; frontend nativo con `pnpm dev` (HMR más rápido).
 
 ```bash
-cp .env.example .env        # ajusta secretos si quieres
-docker compose up --build   # levanta db, backend y frontend
+cp .env.example .env             # ajusta secretos si quieres
+docker compose up -d --build     # levanta SOLO db + backend
+
+cd frontend
+pnpm install                     # la 1ª vez: si pnpm bloquea esbuild, corre `pnpm approve-builds`
+pnpm dev                         # frontend en http://localhost:5173
 ```
 
-- Frontend: http://localhost:5173
+- Frontend (dev): http://localhost:5173
 - Backend (API + docs OpenAPI): http://localhost:8000/docs
 - El backend corre migraciones (Alembic) y el seed inicial al arrancar.
 
 Usuario inicial de prueba (definido en `.env`): `dueno` / `cambiar123`.
+
+### Prueba integrada en contenedor (opcional)
+
+Para levantar también el frontend en Docker (dev server en contenedor):
+
+```bash
+docker compose --profile full up --build
+```
+
+> En producción el frontend **no** usa el dev server: se compila (`vite build`) y se
+> sirve como estático con Nginx. Esa imagen se añade en el hito de despliegue.
 
 ## Hito actual
 
