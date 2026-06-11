@@ -1,0 +1,32 @@
+# ===== Entorno / secretos =====
+.env
+.env.*
+!.env.example
+
+# ===== Python / backend =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ===== Node / frontend =====
+node_modules/
+dist/
+dist-ssr/
+.vite/
+.pnpm-store/
+*.local
+
+# ===== Docker =====
+# (los volúmenes viven en el daemon, no en el repo)
+
+# ===== Editores / OS =====
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
