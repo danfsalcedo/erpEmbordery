@@ -8,20 +8,26 @@ Consume el backend solo por HTTP/JSON. El "por qué" de cada decisión está en
 
 ## Cómo correr
 
-Lo normal es levantarlo con el stack completo desde la raíz:
+En desarrollo el frontend se corre **nativo con `pnpm dev`** (HMR más rápido que en
+Docker, que en Windows requiere polling). El backend y la base de datos sí van en Docker.
 
 ```bash
-docker compose up -d        # db + backend + frontend
+# 1) Desde la raíz: levanta solo db + backend
+docker compose up -d
+
+# 2) En esta carpeta: frontend nativo
+pnpm install     # 1ª vez: si pnpm bloquea esbuild, corre `pnpm approve-builds`
+pnpm dev         # http://localhost:5173
 ```
 
-- App: http://localhost:5173
-
-Fuera de Docker (desarrollo local directo):
+### En Docker (opcional, prueba integrada)
 
 ```bash
-pnpm install
-pnpm dev
+docker compose --profile full up --build   # incluye el dev server del front en contenedor
 ```
+
+> En producción el front se compila (`vite build`) y se sirve estático con Nginx,
+> no con el dev server. Esa imagen se añade en el hito de despliegue.
 
 ## Estructura
 
