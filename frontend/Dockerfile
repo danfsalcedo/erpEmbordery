@@ -5,15 +5,15 @@ RUN corepack enable && corepack prepare pnpm@11.1.1 --activate
 
 WORKDIR /app
 
-# Instala dependencias primero (capa cacheable).
-# pnpm 11 bloquea los scripts de build por seguridad; instalamos sin scripts y luego
-# reconstruimos explícitamente los binarios nativos (esbuild, etc.) de forma determinista.
-COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install --ignore-scripts
-RUN pnpm rebuild
+# Instala dependencias (capa cacheable). pnpm-workspace.yaml lleva la aprobación del
+# build-script de esbuild (allowBuilds), así que pnpm instala normalmente sin bloquearse.
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
 EXPOSE 5173
 
-CMD ["pnpm", "dev", "--host", "0.0.0.0"]
+# Se invoca Vite directamente (no `pnpm dev`) para que pnpm no verifique/reinstale
+# dependencias al arrancar; ya vienen listas en la imagen.
+CMD ["node_modules/.bin/vite", "--host", "0.0.0.0", "--port", "5173"]
